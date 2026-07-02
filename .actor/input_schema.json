@@ -1,0 +1,36 @@
+{
+    "title": "UK Solicitor Directory Scraper Input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "keyword": {
+            "title": "Legal Specialty / Keyword",
+            "type": "string",
+            "description": "The specific legal specialty or keyword (e.g., 'lawyer', 'corporate', 'family').",
+            "editor": "textfield",
+            "prefill": "lawyer"
+        },
+        "location": {
+            "title": "Location (City or Region)",
+            "type": "string",
+            "description": "The UK location (e.g., 'London', 'Birmingham').",
+            "editor": "textfield",
+            "prefill": "London"
+        },
+        "maxLeads": {
+            "title": "Maximum Leads",
+            "type": "integer",
+            "description": "Maximum number of UK solicitor leads to extract.",
+            "default": 100,
+            "minimum": 1
+        },
+        "proxyConfiguration": {
+            "title": "Proxy Configuration",
+            "type": "object",
+            "description": "Proxy settings. Apify Residential Proxy (UK targeted) is required.",
+            "prefill": { "useApifyProxy": true },
+            "editor": "proxy"
+        }
+    },
+    "required": ["keyword", "location"]
+}
