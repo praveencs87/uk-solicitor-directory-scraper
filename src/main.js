@@ -7,8 +7,7 @@ await Actor.init();
 try {
     const input = await Actor.getInput();
     const { 
-        keyword = 'lawyer', 
-        location = 'London', 
+        startUrls = [],
         maxLeads = 100,
         proxyConfiguration 
     } = input || {};
@@ -19,7 +18,7 @@ try {
         apifyProxyCountry: 'GB'
     });
 
-    log.info(`Searching Law Society UK for "${keyword}" in "${location}"`);
+    log.info(`Searching Law Society UK...`);
     await Actor.charge({ eventName: 'apify-actor-start', count: 1 });
 
     let extractedCount = 0;
@@ -64,7 +63,7 @@ try {
                 
                 // Specialty/Type
                 const typeElement = await item.$('.type, .solicitor-type');
-                const specialty = typeElement ? (await typeElement.innerText()).trim() : keyword;
+                const specialty = typeElement ? (await typeElement.innerText()).trim() : '';
 
                 const urlElement = await item.$('h2 a, a.more-details');
                 const listingUrl = urlElement ? await urlElement.getAttribute('href') : '';
@@ -108,11 +107,14 @@ try {
         }
     });
 
-    const startUrl = `https://solicitors.lawsociety.org.uk/search/results?Pro=True&Type=0&Name=${encodeURIComponent(keyword)}&Location=${encodeURIComponent(location)}`;
-    
-    await crawler.addRequests([{
-        url: startUrl
-    }]);
+    if (startUrls && startUrls.length > 0) {
+        for (const req of startUrls) {
+            await crawler.addRequests([{ url: typeof req === 'string' ? req : req.url }]);
+        }
+    } else {
+        log.warning('No startUrls provided. Using default.');
+        await crawler.addRequests([{ url: 'https://solicitors.lawsociety.org.uk/search/results?Type=0&IncludeNlsp=True&ProBonoOnly=False' }]);
+    }
 
     armKillSwitch(crawler);
     await crawler.run();

@@ -3,19 +3,14 @@
     "type": "object",
     "schemaVersion": 1,
     "properties": {
-        "keyword": {
-            "title": "Legal Specialty / Keyword",
-            "type": "string",
-            "description": "The specific legal specialty or keyword (e.g., 'lawyer', 'corporate', 'family').",
-            "editor": "textfield",
-            "prefill": "lawyer"
-        },
-        "location": {
-            "title": "Location (City or Region)",
-            "type": "string",
-            "description": "The UK location (e.g., 'London', 'Birmingham').",
-            "editor": "textfield",
-            "prefill": "London"
+        "startUrls": {
+            "title": "Start URLs",
+            "type": "array",
+            "description": "List of search URLs to scrape.",
+            "editor": "requestListSources",
+            "prefill": [
+                { "url": "https://solicitors.lawsociety.org.uk/search/results?Type=0&IncludeNlsp=True&ProBonoOnly=False" }
+            ]
         },
         "maxLeads": {
             "title": "Maximum Leads",
@@ -32,5 +27,5 @@
             "editor": "proxy"
         }
     },
-    "required": ["keyword", "location"]
+    "required": ["startUrls"]
 }
